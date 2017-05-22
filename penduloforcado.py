@@ -57,14 +57,14 @@ dt = 2e-2
 dt2 = dt*dt 
 g = 9.8 
 gamma = 0.5
-A = 1.2
+A = 1.3
 wf = 2./3.
 m=1
 p1 = Pendulo(1.,10.,0,math.pi/6)
 
 
 tt=0
-tmax=20*p1.T
+tmax=5*p1.T
 t=np.arange(0,tmax,dt)
 x=np.zeros(t.size)
 v=np.zeros(t.size)
@@ -77,23 +77,35 @@ for i in range(t.size):
 
 
 fig=plt.figure(figsize=(8,8),facecolor='white')
-
 phase = fig.add_subplot(211,xlim=(-math.pi,math.pi), ylim=(min(v),max(v)))
 plt.xticks( [-3.14, -3.14/2,0, 3.14/2, 3.14],
         [r'$-\pi$', r'$-\pi/2$','0', r'$+\pi/2$', r'$+\pi$'])
 plt.text(x[0],v[0],'S',color='red')
+phase.xaxis.set_ticks_position('top')
 plt.xlabel('x')
 plt.ylabel('v')
 line, = phase.plot([], [], '.', markersize=0.6) 
 timeleg = phase.text(0.02,0.9, '', transform=phase.transAxes)
+plt.subplots_adjust( hspace = 0)
 
 thetaxt = fig.add_subplot(614,xlim=(0,max(t)),ylim=(-math.pi,math.pi))
+ax = plt.gca()
+ax.xaxis.grid(True)
+ax.yaxis.grid(False)
+plt.setp(thetaxt.get_xticklabels(), visible = False) 
 line2, = thetaxt.plot([], [], 'r.', markersize=0.2)
 
-vxt = fig.add_subplot(615,xlim=(0,max(t)),ylim=(min(v),max(v)))
+vxt = fig.add_subplot(615,xlim=(0,max(t)),ylim=(min(v),max(v)),sharex = thetaxt)
+ax = plt.gca()
+ax.xaxis.grid(True)
+ax.yaxis.grid(False)
+plt.setp(vxt.get_xticklabels(), visible = False) 
 line3, = vxt.plot([], [], 'g-')
 
 ext = fig.add_subplot(616,xlim=(0,max(t)),ylim=(min(e),max(e)))
+ax = plt.gca()
+ax.xaxis.grid(True)
+ax.yaxis.grid(False)
 line4, = ext.plot([], [], 'b-')
 
 def init():
@@ -115,6 +127,5 @@ def animate(i):
 	return line, line2, line3, line4, timeleg
 	
 anim = animation.FuncAnimation(fig, animate, init_func=init,
-                               frames=100000, interval=1e-6, blit=True)
-                    
+                               frames=1700, interval=1e-6, blit=True)
 plt.show()
