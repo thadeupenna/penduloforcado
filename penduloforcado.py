@@ -78,10 +78,10 @@ for i in range(t.size):
 
 
 relax=0
-fig=plt.figure(figsize=(8,8),facecolor='white')
-xp,vp,tp = x[relax:],v[relax:],t[relax:]
 
 
+
+fig=plt.figure(2,figsize=(8,8),facecolor='white')
 axes = plt.axes(xlim=(-math.pi,math.pi), ylim=(min(v),max(v)))
 plt.xticks( [-3.14, -3.14/2,0, 3.14/2, 3.14],
         [r'$-\pi$', r'$-\pi/2$','0', r'$+\pi/2$', r'$+\pi$'])
@@ -89,22 +89,26 @@ plt.text(x[0],v[0],'S',color='red')
 plt.xlabel('x')
 plt.ylabel('v')
 line, = axes.plot([], [], '.') 
+timeleg = axes.text(0.02,0.9, '', transform=axes.transAxes)
 
 def init():
 	line.set_data([], [])
-	return line,
+	timeleg.set_text('') 
+	return line, timeleg
 	
 def animate(i):
 	xa = x[:i]
 	ya = v[:i]
 	line.set_data(xa,ya)
-	return line,
+	timeleg.set_text('t = %g' % t[i])
+	return line, timeleg
 	
 anim = animation.FuncAnimation(fig, animate, init_func=init,
                                frames=100000, interval=1e-6, blit=True)
-                               
-#plt.scatter(xp,vp, s=0.00003)
-
+                              
+                              
+fig=plt.figure(1,facecolor='lightgray')
+fig.canvas.manager.window.wm_geometry('+100+400')
 def graficoxt(pos,f,l,style,mostratics):
 	plt.subplot(pos)
 	axes = plt.gca()
@@ -117,7 +121,8 @@ def graficoxt(pos,f,l,style,mostratics):
 	plt.ylabel(l)
 	plt.plot(t,f,style)
 
-#graficoxt(614,x,'x','r-',False)
-#graficoxt(615,v,'y','b-',False)
-#graficoxt(616,e,'E','g-',True)
+graficoxt(311,x,'x','r-',False)
+graficoxt(312,v,'y','b-',False)
+graficoxt(313,e,'E','g-',True)
+                              
 plt.show()
