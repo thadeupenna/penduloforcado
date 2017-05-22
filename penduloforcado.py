@@ -26,6 +26,7 @@ import numpy as np
 import math
 import matplotlib
 import matplotlib.pyplot as plt 
+import matplotlib.animation as animation
 
 class Pendulo:
 	def __init__(self,massa,l,v,theta):
@@ -52,7 +53,7 @@ class Pendulo:
 		self.energy = 0.5*self.m*(self.l*self.v)**2 + (
 		 self.m*g*self.l*(1-math.cos(self.theta)))
 			
-dt = 5e-4
+dt = 1e-2
 dt2 = dt*dt 
 g = 9.8 
 gamma = 0.5
@@ -63,7 +64,7 @@ p1 = Pendulo(1.,10.,0,math.pi/6)
 
 
 tt=0
-tmax=20*p1.T
+tmax=10*p1.T
 t=np.arange(0,tmax,dt)
 x=np.zeros(t.size)
 v=np.zeros(t.size)
@@ -77,18 +78,32 @@ for i in range(t.size):
 
 
 relax=0
-plt.figure(figsize=(8,12),facecolor='white')
+fig=plt.figure(figsize=(8,8),facecolor='white')
 xp,vp,tp = x[relax:],v[relax:],t[relax:]
 
-plt.subplot(6,1,(1,3))
-plt.xlabel('x')
-plt.ylabel('v')
-axes = plt.gca()
-axes.set_xlim([-math.pi,math.pi])
+
+axes = plt.axes(xlim=(-math.pi,math.pi), ylim=(min(v),max(v)))
 plt.xticks( [-3.14, -3.14/2,0, 3.14/2, 3.14],
         [r'$-\pi$', r'$-\pi/2$','0', r'$+\pi/2$', r'$+\pi$'])
 plt.text(x[0],v[0],'S',color='red')
-plt.scatter(xp,vp, s=0.00003)
+plt.xlabel('x')
+plt.ylabel('v')
+line, = axes.plot([], [], '.') 
+
+def init():
+	line.set_data([], [])
+	return line,
+	
+def animate(i):
+	xa = x[:i]
+	ya = v[:i]
+	line.set_data(xa,ya)
+	return line,
+	
+anim = animation.FuncAnimation(fig, animate, init_func=init,
+                               frames=100000, interval=1e-6, blit=True)
+                               
+#plt.scatter(xp,vp, s=0.00003)
 
 def graficoxt(pos,f,l,style,mostratics):
 	plt.subplot(pos)
@@ -102,7 +117,7 @@ def graficoxt(pos,f,l,style,mostratics):
 	plt.ylabel(l)
 	plt.plot(t,f,style)
 
-graficoxt(614,x,'x','r-',False)
-graficoxt(615,v,'y','b-',False)
-graficoxt(616,e,'E','g-',True)
+#graficoxt(614,x,'x','r-',False)
+#graficoxt(615,v,'y','b-',False)
+#graficoxt(616,e,'E','g-',True)
 plt.show()
