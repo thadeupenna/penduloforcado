@@ -49,9 +49,9 @@ class Pendulo:
 		atmp = self.a(self.theta,vtmp,tt)
 		self.v += (atmp+at)*dt/2
 		p1.theta=(p1.theta+math.pi)%(2*math.pi)-math.pi 
-		self.energy = 0.5*self.m*(self.l*self.v)**2+self.m*g*self.l*(1-math.cos(self.theta))
-		
-		
+		self.energy = 0.5*self.m*(self.l*self.v)**2 + (
+		 self.m*g*self.l*(1-math.cos(self.theta)))
+			
 dt = 5e-4
 dt2 = dt*dt 
 g = 9.8 
