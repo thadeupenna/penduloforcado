@@ -51,6 +51,7 @@ class Pendulo:
 		p1.theta=(p1.theta+math.pi)%(2*math.pi)-math.pi 
 		self.energy = 0.5*self.m*(self.l*self.v)**2+self.m*g*self.l*(1-math.cos(self.theta))
 		
+		
 dt = 5e-4
 dt2 = dt*dt 
 g = 9.8 
@@ -67,9 +68,7 @@ t=np.arange(0,tmax,dt)
 x=np.zeros(t.size)
 v=np.zeros(t.size)
 e=np.zeros(t.size)
-x[0]=p1.theta
-v[0]=p1.v
-e[0]=p1.energy
+x[0],v[0],e[0]=p1.theta,p1.v,p1.energy
 
 
 for i in range(t.size):
@@ -79,10 +78,7 @@ for i in range(t.size):
 
 relax=0
 plt.figure(figsize=(8,12),facecolor='white')
-xp = x[relax:]
-vp = v[relax:]
-tp = t[relax:]
-
+xp,vp,tp = x[relax:],v[relax:],t[relax:]
 
 plt.subplot(6,1,(1,3))
 plt.xlabel('x')
