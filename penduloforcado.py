@@ -64,7 +64,7 @@ p1 = Pendulo(1.,10.,0,math.pi/6)
 
 
 tt=0
-tmax=5*p1.T
+tmax=15*p1.T
 t=np.arange(0,tmax,dt)
 x=np.zeros(t.size)
 v=np.zeros(t.size)
@@ -76,8 +76,30 @@ for i in range(t.size):
 	x[i],v[i],e[i]=p1.theta,p1.v,p1.energy
 
 
-fig=plt.figure(figsize=(8,8),facecolor='white')
-phase = fig.add_subplot(211,xlim=(-math.pi,math.pi), ylim=(min(v),max(v)))
+fig=plt.figure(figsize=(18,8),facecolor='white')
+
+
+thetaxt = fig.add_subplot(331,xlim=(0,max(t)),ylim=(-math.pi,math.pi))
+ax = plt.gca()
+ax.xaxis.grid(True)
+ax.yaxis.grid(False)
+plt.setp(thetaxt.get_xticklabels(), visible = False) 
+line2, = thetaxt.plot([], [], 'r.', markersize=0.2)
+
+vxt = fig.add_subplot(334,xlim=(0,max(t)),ylim=(min(v),max(v)),sharex = thetaxt)
+ax = plt.gca()
+ax.xaxis.grid(True)
+ax.yaxis.grid(False)
+plt.setp(vxt.get_xticklabels(), visible = False) 
+line3, = vxt.plot([], [], 'g-')
+
+ext = fig.add_subplot(337,xlim=(0,max(t)),ylim=(min(e),max(e)))
+ax = plt.gca()
+ax.xaxis.grid(True)
+ax.yaxis.grid(False)
+line4, = ext.plot([], [], 'b-')
+
+phase = fig.add_subplot(132,xlim=(-math.pi,math.pi), ylim=(min(v),max(v)),aspect='equal')
 plt.xticks( [-3.14, -3.14/2,0, 3.14/2, 3.14],
         [r'$-\pi$', r'$-\pi/2$','0', r'$+\pi/2$', r'$+\pi$'])
 plt.text(x[0],v[0],'S',color='red')
@@ -88,44 +110,38 @@ line, = phase.plot([], [], '.', markersize=0.6)
 timeleg = phase.text(0.02,0.9, '', transform=phase.transAxes)
 plt.subplots_adjust( hspace = 0)
 
-thetaxt = fig.add_subplot(614,xlim=(0,max(t)),ylim=(-math.pi,math.pi))
-ax = plt.gca()
-ax.xaxis.grid(True)
-ax.yaxis.grid(False)
-plt.setp(thetaxt.get_xticklabels(), visible = False) 
-line2, = thetaxt.plot([], [], 'r.', markersize=0.2)
 
-vxt = fig.add_subplot(615,xlim=(0,max(t)),ylim=(min(v),max(v)),sharex = thetaxt)
-ax = plt.gca()
-ax.xaxis.grid(True)
-ax.yaxis.grid(False)
-plt.setp(vxt.get_xticklabels(), visible = False) 
-line3, = vxt.plot([], [], 'g-')
+l=p1.l
+xp=np.sin(x)*l
+yp=-np.cos(x)*l
+pendulo = fig.add_subplot(133,xlim=(-l,l),ylim=(-l,l),aspect='equal')
+plt.axis('off')
+line5, = pendulo.plot([], [], 'ro-',markersize=4)
 
-ext = fig.add_subplot(616,xlim=(0,max(t)),ylim=(min(e),max(e)))
-ax = plt.gca()
-ax.xaxis.grid(True)
-ax.yaxis.grid(False)
-line4, = ext.plot([], [], 'b-')
 
 def init():
 	line.set_data([], [])
 	line2.set_data([], [])
 	line3.set_data([], [])
 	line4.set_data([], [])
+	line5.set_data([], [])
 	timeleg.set_text('') 
-	return line, line2, line3, line4, timeleg
+	return line, line2, line3, line4, line5, timeleg
 	
 def animate(i):
 	xa = x[:i]
 	ya = v[:i]
+	pendx = [0, xp[i] ]
+	pendy = [0, yp[i] ]
 	line.set_data(xa,ya)
 	line2.set_data(t[:i],x[:i])
 	line3.set_data(t[:i],v[:i])
 	line4.set_data(t[:i],e[:i])
+	line5.set_data(pendx,pendy)
 	timeleg.set_text('t = %g' % t[i])
-	return line, line2, line3, line4, timeleg
+
+	return line, line2, line3, line4, line5, timeleg
 	
 anim = animation.FuncAnimation(fig, animate, init_func=init,
-                               frames=1700, interval=1e-6, blit=True)
+                               frames=t.size-4, interval=1, blit=True)
 plt.show()
