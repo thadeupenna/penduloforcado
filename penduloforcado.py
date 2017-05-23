@@ -60,7 +60,7 @@ gamma = 0.5
 A = 1.3
 wf = 2./3.
 m=1
-p1 = Pendulo(1.,10.,0,math.pi/6)
+p1 = Pendulo(1.,10.,0,-np.pi/2)
 
 
 tt=0
@@ -99,7 +99,15 @@ ax.xaxis.grid(True)
 ax.yaxis.grid(False)
 line4, = ext.plot([], [], 'b-')
 
-phase = fig.add_subplot(132,xlim=(-math.pi,math.pi), ylim=(min(v),max(v)),aspect='equal')
+l=p1.l
+xp=np.sin(x)*l
+yp=-np.cos(x)*l
+pendulo = fig.add_subplot(132,xlim=(-l,l),ylim=(-l,l),aspect='equal')
+plt.axis('off')
+line5, = pendulo.plot([], [], 'ro-',markersize=4)
+
+
+phase = fig.add_subplot(133,xlim=(-math.pi,math.pi), ylim=(min(v),max(v)),aspect='equal')
 plt.xticks( [-3.14, -3.14/2,0, 3.14/2, 3.14],
         [r'$-\pi$', r'$-\pi/2$','0', r'$+\pi/2$', r'$+\pi$'])
 plt.text(x[0],v[0],'S',color='red')
@@ -109,14 +117,6 @@ plt.ylabel('v')
 line, = phase.plot([], [], '.', markersize=0.6) 
 timeleg = phase.text(0.02,0.9, '', transform=phase.transAxes)
 plt.subplots_adjust( hspace = 0)
-
-
-l=p1.l
-xp=np.sin(x)*l
-yp=-np.cos(x)*l
-pendulo = fig.add_subplot(133,xlim=(-l,l),ylim=(-l,l),aspect='equal')
-plt.axis('off')
-line5, = pendulo.plot([], [], 'ro-',markersize=4)
 
 
 def init():
@@ -143,5 +143,5 @@ def animate(i):
 	return line, line2, line3, line4, line5, timeleg
 	
 anim = animation.FuncAnimation(fig, animate, init_func=init,
-                               frames=t.size-4, interval=1, blit=True)
+                               frames=t.size-4, interval=0.001, blit=True)
 plt.show()
