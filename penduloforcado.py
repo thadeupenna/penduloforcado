@@ -96,10 +96,11 @@ ax.yaxis.grid(False)
 plt.setp(vxt.get_xticklabels(), visible = False) 
 line3, = vxt.plot([], [], 'g-')
 
-ext = fig.add_subplot(337,xlim=(0,max(t)),ylim=(min(e),max(e)))
+ext = fig.add_subplot(337,ylim=(min(e),max(e)), sharex=thetaxt)
 ax = plt.gca()
 ax.xaxis.grid(True)
 ax.yaxis.grid(False)
+plt.setp(ext.get_xticklabels(), visible = True) 
 line4, = ext.plot([], [], 'b-')
 
 l=p1.l
@@ -138,6 +139,7 @@ def animate(i):
 	pendy = [0, yp[i] ]
 	line.set_data(xa,ya)
 	thetaxt.set_xlim(0,t[i])
+	ext.set_xlim(0,t[i])
 	line2.set_data(t[:i],x[:i])
 	line3.set_data(t[:i],v[:i])
 	line4.set_data(t[:i],e[:i])
@@ -147,5 +149,7 @@ def animate(i):
 	return line, line2, line3, line4, line5, timeleg
 	
 anim = animation.FuncAnimation(fig, animate, init_func=init,
-                               frames=t.size, interval=0.001, blit=True,repeat=False)
+                               frames=t.size, interval=1, blit=False,repeat=True)
+#anim.save('basic_animation.mp4', fps=120, extra_args=['-vcodec', 'libx264'])                          
+
 plt.show()
