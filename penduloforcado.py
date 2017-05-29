@@ -64,7 +64,7 @@ p1 = Pendulo(1.,10.,0,-np.pi/2)
 
 
 tt=0
-tmax=100*p1.T
+tmax=10*p1.T
 t=np.arange(0,tmax,dt)
 x=np.zeros(t.size)
 v=np.zeros(t.size)
@@ -75,18 +75,21 @@ for i in range(t.size):
 	p1.move(t[i])
 	x[i],v[i],e[i]=p1.theta,p1.v,p1.energy
 
+#print(plt.style.available)
+plt.style.use('fivethirtyeight')
+#plt.style.use('seaborn-paper')
 
 fig=plt.figure(figsize=(18,8),facecolor='white')
 
 
-thetaxt = fig.add_subplot(331,xlim=(0,max(t)),ylim=(-math.pi,math.pi))
+thetaxt = fig.add_subplot(331,ylim=(-math.pi,math.pi))
 ax = plt.gca()
 ax.xaxis.grid(True)
 ax.yaxis.grid(False)
 plt.setp(thetaxt.get_xticklabels(), visible = False) 
-line2, = thetaxt.plot([], [], 'r.', markersize=0.5)
+line2, = thetaxt.plot([], [], 'r.', markersize=2)
 
-vxt = fig.add_subplot(334,xlim=(0,max(t)),ylim=(min(v),max(v)),sharex = thetaxt)
+vxt = fig.add_subplot(334,ylim=(min(v),max(v)), sharex = thetaxt)
 ax = plt.gca()
 ax.xaxis.grid(True)
 ax.yaxis.grid(False)
@@ -134,6 +137,7 @@ def animate(i):
 	pendx = [0, xp[i] ]
 	pendy = [0, yp[i] ]
 	line.set_data(xa,ya)
+	thetaxt.set_xlim(0,t[i])
 	line2.set_data(t[:i],x[:i])
 	line3.set_data(t[:i],v[:i])
 	line4.set_data(t[:i],e[:i])
@@ -143,5 +147,5 @@ def animate(i):
 	return line, line2, line3, line4, line5, timeleg
 	
 anim = animation.FuncAnimation(fig, animate, init_func=init,
-                               frames=t.size-4, interval=0.001, blit=True)
+                               frames=t.size, interval=0.001, blit=True,repeat=False)
 plt.show()
