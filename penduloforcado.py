@@ -81,32 +81,36 @@ plt.style.use('fivethirtyeight')
 
 fig=plt.figure(figsize=(18,8),facecolor='white')
 
-
+plt.rc('text', usetex=True)
+#plt.rc('font', family='serif')
 thetaxt = fig.add_subplot(331,ylim=(-math.pi,math.pi))
 ax = plt.gca()
+plt.yticks( [-3.14, -3.14/2,0, 3.14/2, 3.14],
+        [r'$-\pi$', r'$-\pi/2$','0', r'$+\pi/2$', r'$+\pi$'])
 ax.xaxis.grid(True)
-ax.yaxis.grid(False)
+ax.yaxis.grid(True)
 plt.setp(thetaxt.get_xticklabels(), visible = False) 
 line2, = thetaxt.plot([], [], 'ro', markersize=2)
 
 vxt = fig.add_subplot(334,ylim=(min(v),max(v)), sharex = thetaxt)
 ax = plt.gca()
 ax.xaxis.grid(True)
-ax.yaxis.grid(False)
+ax.yaxis.grid(True)
 plt.setp(vxt.get_xticklabels(), visible = False) 
 line3, = vxt.plot([], [], 'g-')
 
 ext = fig.add_subplot(337,ylim=(min(e),max(e)), sharex=thetaxt)
 ax = plt.gca()
 ax.xaxis.grid(True)
-ax.yaxis.grid(False)
+ax.yaxis.grid(True)
+plt.rc('text', usetex=False)
 plt.setp(ext.get_xticklabels(), visible = True) 
 line4, = ext.plot([], [], 'b-')
 
 l=p1.l
 xp=np.sin(x)*l
 yp=-np.cos(x)*l
-pendulo = fig.add_subplot(132,xlim=(-l,l),ylim=(-l,l),aspect='equal')
+pendulo = fig.add_subplot(132,xlim=(-l*1.1,l*1.1),ylim=(-l*1.1,l*1.1),aspect='equal')
 plt.axis('off')
 line5 = [] 
 lob = pendulo.plot([], [], 'r-')[0]
@@ -115,7 +119,7 @@ lob = pendulo.plot([], [], 'ko-',markersize=8)[0]
 line5.append(lob)
 print len(line5)
 	
-phase = fig.add_subplot(133,xlim=(-math.pi,math.pi), ylim=(min(v),max(v)),aspect='equal')
+phase = fig.add_subplot(133,xlim=(-math.pi,math.pi), ylim=(min(v),max(v)))
 plt.xticks( [-3.14, -3.14/2,0, 3.14/2, 3.14],
         [r'$-\pi$', r'$-\pi/2$','0', r'$+\pi/2$', r'$+\pi$'])
 plt.text(x[0],v[0],'S',color='red')
@@ -124,7 +128,7 @@ plt.xlabel('x')
 plt.ylabel('v')
 line, = phase.plot([], [], 'ko', markersize=2) 
 timeleg = phase.text(0.02,0.9, '', transform=phase.transAxes)
-plt.subplots_adjust( hspace = 0)
+plt.subplots_adjust( hspace = 0.1)
 
 
 def init():
@@ -140,7 +144,7 @@ def init():
 def animate(i):
 	xa = x[:i]
 	ya = v[:i]
-	imin = 0 if  i < 5 else i-5
+	imin = 0 if  i < 10 else i-10
 	pendx = xp[imin:i+1]
 	pendy = yp[imin:i+1]
 	massx = [0 , xp[i]]
@@ -153,7 +157,6 @@ def animate(i):
 	line4.set_data(t[:i],e[:i])
 	line5[0].set_data(pendx,pendy)
 	line5[1].set_data(massx,massy)
-	#line5.set_data(pendx,pendy)
 	timeleg.set_text('t = %g' % t[i])
 
 	return line, line2, line3, line4, line5, timeleg
