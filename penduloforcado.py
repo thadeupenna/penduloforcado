@@ -57,14 +57,14 @@ dt = 5e-2
 dt2 = dt*dt 
 g = 9.8 
 gamma = 0.5
-A = 3
+A = 1.1
 wf = 2./3.
 m=1
-p1 = Pendulo(1.,10.,0,-np.pi/2)
+p1 = Pendulo(1.,10.,0,-np.pi/6)
 
 
 tt=0
-tmax=10*p1.T
+tmax=15*p1.T
 t=np.arange(0,tmax,dt)
 x=np.zeros(t.size)
 v=np.zeros(t.size)
@@ -87,7 +87,7 @@ ax = plt.gca()
 ax.xaxis.grid(True)
 ax.yaxis.grid(False)
 plt.setp(thetaxt.get_xticklabels(), visible = False) 
-line2, = thetaxt.plot([], [], 'r.', markersize=2)
+line2, = thetaxt.plot([], [], 'ro', markersize=2)
 
 vxt = fig.add_subplot(334,ylim=(min(v),max(v)), sharex = thetaxt)
 ax = plt.gca()
@@ -108,9 +108,13 @@ xp=np.sin(x)*l
 yp=-np.cos(x)*l
 pendulo = fig.add_subplot(132,xlim=(-l,l),ylim=(-l,l),aspect='equal')
 plt.axis('off')
-line5, = pendulo.plot([], [], 'ro-',markersize=4)
-
-
+line5 = [] 
+lob = pendulo.plot([], [], 'r-')[0]
+line5.append(lob)
+lob = pendulo.plot([], [], 'ko-',markersize=8)[0]
+line5.append(lob)
+print len(line5)
+	
 phase = fig.add_subplot(133,xlim=(-math.pi,math.pi), ylim=(min(v),max(v)),aspect='equal')
 plt.xticks( [-3.14, -3.14/2,0, 3.14/2, 3.14],
         [r'$-\pi$', r'$-\pi/2$','0', r'$+\pi/2$', r'$+\pi$'])
@@ -118,7 +122,7 @@ plt.text(x[0],v[0],'S',color='red')
 phase.xaxis.set_ticks_position('top')
 plt.xlabel('x')
 plt.ylabel('v')
-line, = phase.plot([], [], '.', markersize=2) 
+line, = phase.plot([], [], 'ko', markersize=2) 
 timeleg = phase.text(0.02,0.9, '', transform=phase.transAxes)
 plt.subplots_adjust( hspace = 0)
 
@@ -128,28 +132,34 @@ def init():
 	line2.set_data([], [])
 	line3.set_data([], [])
 	line4.set_data([], [])
-	line5.set_data([], [])
+	for lined in line5:
+		lined.set_data([], [])
 	timeleg.set_text('') 
 	return line, line2, line3, line4, line5, timeleg
 	
 def animate(i):
 	xa = x[:i]
 	ya = v[:i]
-	pendx = [0, xp[i] ]
-	pendy = [0, yp[i] ]
+	imin = 0 if  i < 5 else i-5
+	pendx = xp[imin:i+1]
+	pendy = yp[imin:i+1]
+	massx = [0 , xp[i]]
+	massy = [0 , yp[i]]
 	line.set_data(xa,ya)
 	thetaxt.set_xlim(0,t[i])
 	ext.set_xlim(0,t[i])
 	line2.set_data(t[:i],x[:i])
 	line3.set_data(t[:i],v[:i])
 	line4.set_data(t[:i],e[:i])
-	line5.set_data(pendx,pendy)
+	line5[0].set_data(pendx,pendy)
+	line5[1].set_data(massx,massy)
+	#line5.set_data(pendx,pendy)
 	timeleg.set_text('t = %g' % t[i])
 
 	return line, line2, line3, line4, line5, timeleg
 	
 anim = animation.FuncAnimation(fig, animate, init_func=init,
-                               frames=t.size, interval=1, blit=False,repeat=True)
+                               frames=t.size, interval=1, blit=False,repeat=False)
 #anim.save('basic_animation.mp4', fps=120, extra_args=['-vcodec', 'libx264'])                          
 
 plt.show()
