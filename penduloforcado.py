@@ -81,12 +81,12 @@ plt.style.use('fivethirtyeight')
 
 fig=plt.figure(figsize=(18,8),facecolor='white')
 
-plt.rc('text', usetex=True)
-#plt.rc('font', family='serif')
+#plt.rc('text', usetex=True)
+plt.rc('font', family='serif')
 thetaxt = fig.add_subplot(331,ylim=(-math.pi,math.pi))
 ax = plt.gca()
-plt.yticks( [-3.14, -3.14/2,0, 3.14/2, 3.14],
-        [r'$-\pi$', r'$-\pi/2$','0', r'$+\pi/2$', r'$+\pi$'])
+#plt.yticks( [-3.14, -3.14/2,0, 3.14/2, 3.14],
+#        [r'$-\pi$', r'$-\pi/2$','0', r'$\pi/2$', r'$\pi$'])
 ax.xaxis.grid(True)
 ax.yaxis.grid(True)
 plt.setp(thetaxt.get_xticklabels(), visible = False) 
@@ -117,12 +117,12 @@ lob = pendulo.plot([], [], 'r-')[0]
 line5.append(lob)
 lob = pendulo.plot([], [], 'ko-',markersize=8)[0]
 line5.append(lob)
-print len(line5)
+# print len(line5)
 	
 phase = fig.add_subplot(133,xlim=(-math.pi,math.pi), ylim=(min(v),max(v)))
-plt.xticks( [-3.14, -3.14/2,0, 3.14/2, 3.14],
-        [r'$-\pi$', r'$-\pi/2$','0', r'$+\pi/2$', r'$+\pi$'])
-plt.text(x[0],v[0],'S',color='red')
+#plt.xticks( [-3.14, -3.14/2,0, 3.14/2, 3.14],
+#        [r'$-\pi$', r'$-\pi/2$','0', r'$+\pi/2$', r'$+\pi$'])
+#plt.text(x[0],v[0],'S',color='red')
 phase.xaxis.set_ticks_position('top')
 plt.xlabel('x')
 plt.ylabel('v')
